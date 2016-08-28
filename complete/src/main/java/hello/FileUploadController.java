@@ -6,6 +6,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,16 +46,16 @@ public class FileUploadController {
 		return "index";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public Model list(Model model) throws IOException {
+	@RequestMapping(method = RequestMethod.GET, value = "/api/files")
+	public ResponseEntity<List<Link>> list(Model model) throws IOException {
 
-		model.addAttribute("files", Files.walk(Paths.get(ROOT))
+		List<Link> files = Files.walk(Paths.get(ROOT))
 				.filter(path -> !path.equals(Paths.get(ROOT)))
 				.map(path -> Paths.get(ROOT).relativize(path))
 				.map(path -> linkTo(methodOn(FileUploadController.class).getFile(path.toString())).withRel(path.toString()))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
 
-		return model;
+		return new ResponseEntity<List<Link>>(files, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}")
@@ -66,7 +69,7 @@ public class FileUploadController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/upload")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 								   RedirectAttributes redirectAttributes) {
 
@@ -76,7 +79,7 @@ public class FileUploadController {
 				redirectAttributes.addFlashAttribute("message",
 						"You successfully uploaded " + file.getOriginalFilename() + "!");
 			} catch (IOException|RuntimeException e) {
-				redirectAttributes.addFlashAttribute("message", "Failued to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+				redirectAttributes.addFlashAttribute("message", "Failured to upload " + file.getOriginalFilename() + " => " + e.getMessage());
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("message", "Failed to upload " + file.getOriginalFilename() + " because it was empty");
