@@ -28,6 +28,16 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>angularjs</artifactId>
+		    <version>1.5.7</version>
+		</dependency>        
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>angular-file-upload</artifactId>
+		    <version>11.0.0</version>
+		</dependency>        
     </dependencies>
 
     <properties>

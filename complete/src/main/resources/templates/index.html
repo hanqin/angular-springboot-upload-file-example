@@ -1,26 +1,56 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
+<header>
+	<script type="text/javascript" src="webjars/angularjs/1.5.7/angular.min.js"></script>
+	<script type="text/javascript" src="webjars/angular-file-upload/11.0.0/ng-file-upload.min.js"></script>
+	<script type="text/javascript" src="./js/controller.js"></script>
+	<script type="text/javascript" src="./js/controller.js"></script>
+</header>
 
-	<div th:if="${message}">
-		<h2 th:text="${message}"/>
-	</div>
+<body ng-app="fileUpload" ng-controller="MyCtrl">
 
-	<div>
-		<form method="POST" enctype="multipart/form-data" action="/">
-			<table>
-				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-			</table>
-		</form>
-	</div>
-
-	<div>
-		<ul>
-			<li th:each="file : ${files}">
-				<a th:href="${file.href}" th:text="${file.rel}" />
-			</li>
-		</ul>
-	</div>
+  <h4>Upload on file select</h4>
+  <button 
+  		type="file" 
+  		ngf-select="uploadFiles($file, $invalidFiles)"
+        accept="pdf/*" ngf-max-height="1000" ngf-max-size="1MB">Select File
+  </button>
+  <br /><br />
+  File:
+  <div style="font:smaller">{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
+      <span class="progress" ng-show="f.progress >= 0">
+          <div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>
+      </span>
+  </div>     
+  {{errorMsg}}
+  <br />
+  Files:
+  <br />
+  {{files}}
 
 </body>
+
+<!-- <body> -->
+
+<!-- 	<div th:if="${message}"> -->
+<!-- 		<h2 th:text="${message}"/> -->
+<!-- 	</div> -->
+
+<!-- 	<div> -->
+<!-- 		<form method="POST" enctype="multipart/form-data" action="/"> -->
+<!-- 			<table> -->
+<!-- 				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr> -->
+<!-- 				<tr><td></td><td><input type="submit" value="Upload" /></td></tr> -->
+<!-- 			</table> -->
+<!-- 		</form> -->
+<!-- 	</div> -->
+
+<!-- 	<div> -->
+<!-- 		<ul> -->
+<!-- 			<li th:each="file : ${files}"> -->
+<!-- 				<a th:href="${file.href}" th:text="${file.rel}" /> -->
+<!-- 			</li> -->
+<!-- 		</ul> -->
+<!-- 	</div> -->
+
+<!-- </body> -->
 </html>

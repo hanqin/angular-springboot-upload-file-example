@@ -39,7 +39,12 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public String provideUploadInfo(Model model) throws IOException {
+	public String index(Model model) throws IOException {
+		return "index";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	public Model list(Model model) throws IOException {
 
 		model.addAttribute("files", Files.walk(Paths.get(ROOT))
 				.filter(path -> !path.equals(Paths.get(ROOT)))
@@ -47,7 +52,7 @@ public class FileUploadController {
 				.map(path -> linkTo(methodOn(FileUploadController.class).getFile(path.toString())).withRel(path.toString()))
 				.collect(Collectors.toList()));
 
-		return "uploadForm";
+		return model;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}")
